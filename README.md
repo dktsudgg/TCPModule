@@ -29,7 +29,35 @@ java -jar tcpmodule-{version}.jar
 
 ## Usage example
 
-I will write this section..
+1. Server Node example
+```java
+// Server Node example..
+// You have to use correct {your_ip}:{your_port} that others can detect on the internet.
+// This server node example will access infinitely to make connection with Node 192.168.0.140:8891 until success.
+String myip = {your_ip};
+int myport = {your_port};
+CWNode cwnode1 = new CWNode(myip, myport, new CWCommunicationCallback() {
+			
+   @Override
+   public void connectionFailure(Object obj) {
+
+      System.out.println("cwnode1's connectionFailure callback..!");
+   }
+
+   @Override
+   public void sendDataFailure(Object obj, CWConnProtocol data) {
+
+      String msg = (String) obj;
+      System.out.println("cwnode sendData request is Failed ::"+msg);
+   }
+});
+cwnode1.addClient("192.168.0.140", 8891);
+
+cwnode1.start();
+
+// If you want to blocking until my server down, you can use block() method.
+cwnode1.block();
+```
 
 ## Development setup
 
