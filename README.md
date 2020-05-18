@@ -51,7 +51,7 @@ CWNode cwnode1 = new CWNode(myip, myport, new CWCommunicationCallback() {
       System.out.println("cwnode sendData request is Failed ::"+msg);
    }
 });
-cwnode1.addClient("192.168.0.140", 8891);
+cwnode1.addClient("192.168.0.140", 8891); // you can add more target node as much as you want.
 
 cwnode1.start();
 
