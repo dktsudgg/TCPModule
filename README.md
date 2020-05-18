@@ -10,10 +10,10 @@ This project is for understanding these two agenda and providing the sample code
 ![](p2p_achi.png)
 ![](cs_achi.png)
 
-## Run
+## You can just run the Runnable jar that I committed for test
 
 ```sh
-# 1. make property file like this. location is config/node.properties..
+# 1. Make property file like this. location is {jar file location}/config/node.properties..
 # my ip
 ip=192.168.0.4
 # my port
@@ -23,8 +23,15 @@ targetNodeList=192.168.0.140:8891,192.168.0.4:8892
 ```
 
 ```sh
-# 2. make Runnable jar file with "CWNode" class in com.cw.node package and run.
+# 2. 
+# Make Runnable jar file with "CWNode" class in "com.cw.node"
+# Or just download tcpmodule-{version}.jar
+# 
+# And run.
 java -jar tcpmodule-{version}.jar
+
+
+# 3. Use client source to send TEST message to server in [Usage example] - [2. Client example] Section.
 ```
 
 ## Usage example
