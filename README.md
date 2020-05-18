@@ -161,7 +161,8 @@ the "DATA" field is a data for business logic in your application. it has differ
     * Work in progress.. 
     
 I will add two features big/little endian logic and injecting your own Netty handler logic in later version.
-I made tcp protocol that only allow UTF-8 json string. but i will remove this restriction in later version.
+
+I made tcp protocol that only allow UTF-8 JSON string. but i will remove this restriction in later version.
 
 ## Meta
 
