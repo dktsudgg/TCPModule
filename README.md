@@ -59,9 +59,52 @@ cwnode1.start();
 cwnode1.block();
 ```
 
+2. Client example
+```java
+// Client example..
+// I make client using java default BlockingIO Socket class.
+// It has sync/async mode.
+
+// 1. Sync Mode Client
+String targetNodeIp = {CWNode IP that you want to access}
+int targetNodePort = {CWNode PORT that you want to access}
+CWNodeClient client = new CWNodeClient(
+	targetNodeIp
+	, targetNodePort
+)
+.connectSyncMode();
+
+// Send and receive message using TEST protocol.
+// TEST protocol is a sample protocol implementing echo server logic
+JSONObject msg_json = new JSONObject();
+msg_json.put("a": "asdf");
+CWConnProtocol packet = client.send(ProtocolVal.TEST, msg_json.toString());
+
+// show what client received.
+String receivedPacketLog = "\n" + "<<<----- RECEIVED PACKET ----->>>";
+receivedPacketLog += "\n" + "Protocol : " + packet.getProtocol();
+receivedPacketLog += "\n" + "Data : " + new String(packet.getData(), 0, packet.getData().length, "UTF-8");
+receivedPacketLog += "\n" + "<<<--------------------------->>>\n";
+System.out.println(receivedPacketLog);
+
+// disconnect from server.
+client.disconnect();
+```
+
 ## Development setup
 
 you have to install java runtime.
+
+## TCP Protocol explanation
+I designed tcp protocol shape like this.
+
+[ HEADER ] [ PROTOCOL ] [ DATA ]
+
+the "HEADER" field is a length of "DATA" field. it is 2bytes.
+
+the "PROTOCOL" field is a classification value that help CWNode use "DATA" in correct purpose as you want. it is 1byte.
+
+the "DATA" field is a data for business logic in your application. it has different bytes every time that time
 
 ## Release History
 
@@ -69,6 +112,7 @@ you have to install java runtime.
     * Work in progress.. 
     
 I will add two features big/little endian logic and injecting your own Netty handler logic in later version.
+I made tcp protocol that only allow UTF-8 json string. but i will remove this restriction in later version.
 
 ## Meta
 
