@@ -77,7 +77,7 @@ CWNodeClient client = new CWNodeClient(
 // Send and receive message using TEST protocol.
 // TEST protocol is a sample protocol implementing echo server logic
 JSONObject msg_json = new JSONObject();
-msg_json.put("a": "asdf");
+msg_json.put("a", "asdf");
 CWConnProtocol packet = client.send(ProtocolVal.TEST, msg_json.toString());
 
 // show what client received.
@@ -86,6 +86,50 @@ receivedPacketLog += "\n" + "Protocol : " + packet.getProtocol();
 receivedPacketLog += "\n" + "Data : " + new String(packet.getData(), 0, packet.getData().length, "UTF-8");
 receivedPacketLog += "\n" + "<<<--------------------------->>>\n";
 System.out.println(receivedPacketLog);
+
+...
+
+// disconnect from server.
+client.disconnect();
+
+
+// 2. Async Mode Client
+CWNodeClient client = new CWNodeClient(
+	targetNodeIp
+	, targetNodePort
+)
+.connectAsyncMode(new CWNodeClientCallback() {
+	
+	@Override
+	public void receivedData(Object obj) {
+		try {
+			CWConnProtocol packet = (CWConnProtocol) obj;
+			
+			// show what client received.
+			String receivedPacketLog = "\n" + "<<<----- RECEIVED PACKET ----->>>";
+			receivedPacketLog += "\n" + "Protocol : " + packet.getProtocol();
+			receivedPacketLog += "\n" + "Data : " + new String(packet.getData(), 0, packet.getData().length, "UTF-8");
+			receivedPacketLog += "\n" + "<<<--------------------------->>>\n";
+			System.out.println(receivedPacketLog);
+		} catch(UnsupportedEncodingException ue) {
+			
+		}
+					
+	}
+	
+	@Override
+	public void connectionFailure(Object obj) {
+		Exception e = (IOException) obj;
+		e.printStackTrace();
+		
+	}
+});
+
+JSONObject msg_json = new JSONObject();
+msg_json.put("a", "asdf");
+CWConnProtocol packet = client.send(ProtocolVal.TEST, msg_json.toString());
+
+...
 
 // disconnect from server.
 client.disconnect();
