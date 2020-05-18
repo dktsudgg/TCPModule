@@ -30,6 +30,9 @@ targetNodeList=192.168.0.140:8891,192.168.0.4:8892
 # And run.
 java -jar tcpmodule-{version}.jar
 
+# Or you can add property like this when you run jar file, for trouble shooting Netty Memory leak
+java -Dio.netty.leakDetectionLevel=advanced -jar tcpmodule-{version}.jar
+
 
 # 3. Use client source to send TEST message to server in [Usage example] - [2. Client example] Section.
 ```
