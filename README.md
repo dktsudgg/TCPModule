@@ -93,6 +93,7 @@ System.out.println(receivedPacketLog);
 // disconnect from server.
 client.disconnect();
 
+// --------------------------------------------------------------------------------------------------
 
 // 2. Async Mode Client
 String targetNodeIp = {CWNode IP that you want to access}
