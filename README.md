@@ -32,8 +32,8 @@ java -jar tcpmodule-{version}.jar
 1. Server Node example
 ```java
 // Server Node example..
-// You have to use correct {your_ip}:{your_port} that others can detect on the internet.
-// This server node example will access infinitely to make connection with Node 192.168.0.140:8891 until success.
+// You have to use correct {your_ip}:{your_port} that other CWNodes can detect on the internet.
+// This server node example will access infinitely to make connection with CWNode 192.168.0.140:8891 until success.
 String myip = {your_ip};
 int myport = {your_port};
 CWNode cwnode1 = new CWNode(myip, myport, new CWCommunicationCallback() {
@@ -51,7 +51,7 @@ CWNode cwnode1 = new CWNode(myip, myport, new CWCommunicationCallback() {
       System.out.println("cwnode sendData request is Failed ::"+msg);
    }
 });
-cwnode1.addClient("192.168.0.140", 8891); // you can add more target node as much as you want.
+cwnode1.addClient("192.168.0.140", 8891); // you can add more target CWNode as much as you want.
 
 cwnode1.start();
 
