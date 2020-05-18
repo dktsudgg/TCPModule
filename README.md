@@ -68,6 +68,7 @@ cwnode1.block();
 // 1. Sync Mode Client
 String targetNodeIp = {CWNode IP that you want to access}
 int targetNodePort = {CWNode PORT that you want to access}
+
 CWNodeClient client = new CWNodeClient(
 	targetNodeIp
 	, targetNodePort
@@ -94,6 +95,9 @@ client.disconnect();
 
 
 // 2. Async Mode Client
+String targetNodeIp = {CWNode IP that you want to access}
+int targetNodePort = {CWNode PORT that you want to access}
+
 CWNodeClient client = new CWNodeClient(
 	targetNodeIp
 	, targetNodePort
