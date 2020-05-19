@@ -146,7 +146,7 @@ CWNodeClient client = new CWNodeClient(
 // you will receive TEST_ACK message from server on your CWNodeClientCallback.
 JSONObject msg_json = new JSONObject();
 msg_json.put("a", "asdf");
-CWConnProtocol packet = client.send(ProtocolVal.TEST, msg_json.toString());
+client.send(ProtocolVal.TEST, msg_json.toString());
 
 ...
 
