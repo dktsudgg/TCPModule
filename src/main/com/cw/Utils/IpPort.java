@@ -1,4 +1,4 @@
-package com.cw.Utils;
+package main.com.cw.Utils;
 
 import io.netty.channel.Channel;
 

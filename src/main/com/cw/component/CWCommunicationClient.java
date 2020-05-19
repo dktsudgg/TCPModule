@@ -1,10 +1,10 @@
-package com.cw.component;
+package main.com.cw.component;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import com.cw.Utils.*;
 import io.netty.handler.timeout.IdleStateHandler;
+import main.com.cw.Utils.*;
 import org.json.JSONObject;
 
 import io.netty.bootstrap.Bootstrap;
@@ -19,9 +19,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
-import com.cw.codec.CWConnProtocolDecoder;
-import com.cw.codec.CWConnProtocolEncoder;
-import com.cw.node.CWNode;
+import main.com.cw.codec.CWConnProtocolDecoder;
+import main.com.cw.codec.CWConnProtocolEncoder;
+import main.com.cw.node.CWNode;
 
 public class CWCommunicationClient implements Runnable{
     

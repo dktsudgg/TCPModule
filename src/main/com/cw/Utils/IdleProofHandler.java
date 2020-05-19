@@ -1,6 +1,6 @@
-package com.cw.Utils;
+package main.com.cw.Utils;
 
-import com.cw.node.CWNode;
+import main.com.cw.node.CWNode;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleState;

@@ -1,4 +1,4 @@
-package com.cw.Utils;
+package main.com.cw.Utils;
 
 public interface CWCommunicationCallback {
 	

@@ -1,11 +1,11 @@
-package com.cw.codec;
+package main.com.cw.codec;
 
 import java.util.List;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import com.cw.Utils.CWConnProtocol;
-import com.cw.Utils.ProtocolVal;
+import main.com.cw.Utils.CWConnProtocol;
+import main.com.cw.Utils.ProtocolVal;
 
 public class CWConnProtocolDecoder extends ByteToMessageDecoder{
 

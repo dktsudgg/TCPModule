@@ -1,4 +1,4 @@
-package com.cw.node;
+package main.com.cw.node;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -8,11 +8,11 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import com.cw.Utils.CWCommunicationCallback;
-import com.cw.Utils.CWConnProtocol;
-import com.cw.Utils.IpPort;
-import com.cw.component.CWCommunicationClient;
-import com.cw.component.CWCommunicationServer;
+import main.com.cw.Utils.CWCommunicationCallback;
+import main.com.cw.Utils.CWConnProtocol;
+import main.com.cw.Utils.IpPort;
+import main.com.cw.component.CWCommunicationClient;
+import main.com.cw.component.CWCommunicationServer;
 
 import io.netty.channel.Channel;
 
