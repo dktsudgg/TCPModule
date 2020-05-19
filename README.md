@@ -173,6 +173,10 @@ the "DATA" field is a data for business logic in your application. it has differ
 
 * 0.0.1
     * Work in progress.. 
+* 0.0.2
+    * Update to latest version of Netty. [ netty-all-4.1.27.Final.jar --> netty-all-4.1.50.Final.jar ]
+    * add network connection check logic
+(if no send/recv message between peers, send heartbeat message each other. and if no heartbeat return message from the other party, peer do close the connection.)
     
 I will add two features big/little endian logic and injecting your own Netty handler logic in later version.
 
