@@ -10,10 +10,10 @@ This project is for understanding these two agenda and providing the sample code
 ![](p2p_achi.png)
 ![](cs_achi.png)
 
-## Run
+## You can just run the Runnable jar that I committed for test
 
 ```sh
-# 1. make property file like this. location is config/node.properties..
+# 1. Make property file like this. location is {jar file location}/config/node.properties..
 # my ip
 ip=192.168.0.4
 # my port
@@ -23,8 +23,18 @@ targetNodeList=192.168.0.140:8891,192.168.0.4:8892
 ```
 
 ```sh
-# 2. make Runnable jar file with "CWNode" class in com.cw.node package and run.
+# 2. 
+# Make Runnable jar file with "CWNode" class in "com.cw.node"
+# Or just download tcpmodule-{version}.jar
+# 
+# And run.
 java -jar tcpmodule-{version}.jar
+
+# Or you can add jvm parameter like this when you run jar file, for trouble shooting Netty Memory leak
+java -Dio.netty.leakDetectionLevel=advanced -jar tcpmodule-{version}.jar
+
+
+# 3. Use client source to send TEST message to server in [Usage example] - [2. Client example] Section.
 ```
 
 ## Usage example
@@ -59,9 +69,105 @@ cwnode1.start();
 cwnode1.block();
 ```
 
+2. Client example
+```java
+// Client example..
+// I make client using java default BlockingIO Socket class.
+// It has sync/async mode.
+
+// 1. Sync Mode Client
+String targetNodeIp = {CWNode IP that you want to access}
+int targetNodePort = {CWNode PORT that you want to access}
+
+CWNodeClient client = new CWNodeClient(
+	targetNodeIp
+	, targetNodePort
+)
+.connectSyncMode();
+
+// Send and receive message using TEST protocol.
+// TEST protocol is a sample protocol implementing echo server logic.
+// you will receive TEST_ACK message from server.
+JSONObject msg_json = new JSONObject();
+msg_json.put("a", "asdf");
+CWConnProtocol packet = client.send(ProtocolVal.TEST, msg_json.toString());
+
+// show what client received.
+String receivedPacketLog = "\n" + "<<<----- RECEIVED PACKET ----->>>";
+receivedPacketLog += "\n" + "Protocol : " + packet.getProtocol();
+receivedPacketLog += "\n" + "Data : " + new String(packet.getData(), 0, packet.getData().length, "UTF-8");
+receivedPacketLog += "\n" + "<<<--------------------------->>>\n";
+System.out.println(receivedPacketLog);
+
+...
+
+// disconnect from server.
+client.disconnect();
+
+// --------------------------------------------------------------------------------------------------
+
+// 2. Async Mode Client
+String targetNodeIp = {CWNode IP that you want to access}
+int targetNodePort = {CWNode PORT that you want to access}
+
+CWNodeClient client = new CWNodeClient(
+	targetNodeIp
+	, targetNodePort
+)
+.connectAsyncMode(new CWNodeClientCallback() {
+	
+	@Override
+	public void receivedData(Object obj) {
+		try {
+			CWConnProtocol packet = (CWConnProtocol) obj;
+			
+			// show what client received.
+			String receivedPacketLog = "\n" + "<<<----- RECEIVED PACKET ----->>>";
+			receivedPacketLog += "\n" + "Protocol : " + packet.getProtocol();
+			receivedPacketLog += "\n" + "Data : " + new String(packet.getData(), 0, packet.getData().length, "UTF-8");
+			receivedPacketLog += "\n" + "<<<--------------------------->>>\n";
+			System.out.println(receivedPacketLog);
+		} catch(UnsupportedEncodingException ue) {
+			
+		}
+					
+	}
+	
+	@Override
+	public void connectionFailure(Object obj) {
+		Exception e = (IOException) obj;
+		e.printStackTrace();
+		
+	}
+});
+
+// Send and receive message using TEST protocol.
+// TEST protocol is a sample protocol implementing echo server logic.
+// you will receive TEST_ACK message from server on your CWNodeClientCallback.
+JSONObject msg_json = new JSONObject();
+msg_json.put("a", "asdf");
+client.send(ProtocolVal.TEST, msg_json.toString());
+
+...
+
+// disconnect from server.
+client.disconnect();
+```
+
 ## Development setup
 
 you have to install java runtime.
+
+## TCP Protocol explanation
+I designed tcp protocol shape like this.
+
+[ HEADER ] [ PROTOCOL ] [ DATA ]
+
+the "HEADER" field is a length of "DATA" field. it is 2bytes.
+
+the "PROTOCOL" field is a classification value that help CWNode use "DATA" in correct purpose as you want. it is 1byte.
+
+the "DATA" field is a data for business logic in your application. it has different bytes every time that time
 
 ## Release History
 
@@ -69,6 +175,8 @@ you have to install java runtime.
     * Work in progress.. 
     
 I will add two features big/little endian logic and injecting your own Netty handler logic in later version.
+
+I made tcp protocol that only allow UTF-8 JSON string. but i will remove this restriction in later version.
 
 ## Meta
 
