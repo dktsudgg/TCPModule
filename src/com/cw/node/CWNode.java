@@ -1,5 +1,6 @@
 package com.cw.node;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
@@ -208,64 +209,64 @@ public class CWNode {
         Properties properties = new Properties();
         
         try {
-//            FileReader reader = new FileReader(resource);
-//            properties.load(reader);
-//
-//            System.out.println("CWNode Start..");
-//
-//            String nodeIp = properties.getProperty("ip");							// 노드의 IP 값 불러옴
-//            int nodePort = Integer.parseInt( properties.getProperty("port") );		// 노드의 PORT 값 불러옴
-//            String targetNodeListStr = properties.getProperty("targetNodeList");	// 바라볼 노드의 IP:PORT 리스트를 불러옴
-//
-//            String[] targetNodeList = null;
-//            if(targetNodeListStr != null && targetNodeListStr.equals("")==false ) {
-//            	targetNodeListStr = targetNodeListStr.replaceAll(" ", "");	// 공백 제거..
-//            	targetNodeList = targetNodeListStr.split(",");
-//            }
-//
-//            System.out.println("Node IP : " + nodeIp);
-//            System.out.println("Node PORT : " + nodePort);
-//
-//            // Node instance..
-//    		CWNode cwnode = new CWNode(nodeIp, nodePort, new CWCommunicationCallback() {
-//
-//    			@Override
-//    			public void connectionFailure(Object obj) {
-//
-//    				System.out.println("connectionFailure callback..!");
-//    			}
-//
-//    			@Override
-//    			public void sendDataFailure(Object obj, CWConnProtocol data) {
-//    				String msg = (String) obj;
-//    				System.out.println("sendData request is Failed ::"+msg);
-//    			}
-//
-//			});
-//
-//    		// targetNodes Setting..
-//    		if(targetNodeList != null) {
-//    			for(int i=0; i < targetNodeList.length; i++) {
-//    				String[] targetNodeIpAndPort = targetNodeList[i].split(":");
-//    				String targetNodeIp = targetNodeIpAndPort[0];
-//    				int targetNodePort = Integer.parseInt( targetNodeIpAndPort[1] );
-//
-//    				cwnode.addClient(targetNodeIp, targetNodePort);
-//
-//    				System.out.println("TargetNode-" + targetNodeIp + ":" + targetNodePort + " is enrolled..");
-//    			}
-//
-//    		}
-//
-//    		System.out.println("");
-//
-//    		// start Node..
-//    		cwnode.start();
-//
-//    		// blocking Main Thread not to finish java main function scope..
-//    		cwnode.block();
+            FileReader reader = new FileReader(resource);
+            properties.load(reader);
+
+            System.out.println("CWNode Start..");
+
+            String nodeIp = properties.getProperty("ip");							// 노드의 IP 값 불러옴
+            int nodePort = Integer.parseInt( properties.getProperty("port") );		// 노드의 PORT 값 불러옴
+            String targetNodeListStr = properties.getProperty("targetNodeList");	// 바라볼 노드의 IP:PORT 리스트를 불러옴
+
+            String[] targetNodeList = null;
+            if(targetNodeListStr != null && targetNodeListStr.equals("")==false ) {
+            	targetNodeListStr = targetNodeListStr.replaceAll(" ", "");	// 공백 제거..
+            	targetNodeList = targetNodeListStr.split(",");
+            }
+
+            System.out.println("Node IP : " + nodeIp);
+            System.out.println("Node PORT : " + nodePort);
+
+            // Node instance..
+    		CWNode cwnode = new CWNode(nodeIp, nodePort, new CWCommunicationCallback() {
+
+    			@Override
+    			public void connectionFailure(Object obj) {
+
+    				System.out.println("connectionFailure callback..!");
+    			}
+
+    			@Override
+    			public void sendDataFailure(Object obj, CWConnProtocol data) {
+    				String msg = (String) obj;
+    				System.out.println("sendData request is Failed ::"+msg);
+    			}
+
+			});
+
+    		// targetNodes Setting..
+    		if(targetNodeList != null) {
+    			for(int i=0; i < targetNodeList.length; i++) {
+    				String[] targetNodeIpAndPort = targetNodeList[i].split(":");
+    				String targetNodeIp = targetNodeIpAndPort[0];
+    				int targetNodePort = Integer.parseInt( targetNodeIpAndPort[1] );
+
+    				cwnode.addClient(targetNodeIp, targetNodePort);
+
+    				System.out.println("TargetNode-" + targetNodeIp + ":" + targetNodePort + " is enrolled..");
+    			}
+
+    		}
+
+    		System.out.println("");
+
+    		// start Node..
+    		cwnode.start();
+
+    		// blocking Main Thread not to finish java main function scope..
+    		cwnode.block();
     		
-    		test(null);
+//    		test(null);
     		
         } catch (IOException e) {
         	System.out.println(resource+" 파일을 로드할 수 없습니다. 해당 경로에 설정파일을 작성하시거나, 경로를 확인 부탁드립니다!");
