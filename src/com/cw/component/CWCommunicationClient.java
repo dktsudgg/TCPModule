@@ -1,21 +1,13 @@
 package com.cw.component;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.nio.charset.Charset;
-import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import org.json.JSONArray;
+import com.cw.Utils.*;
+import io.netty.handler.timeout.IdleStateHandler;
 import org.json.JSONObject;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -27,12 +19,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
-import com.cw.Utils.CWCommunicationCallback;
-import com.cw.Utils.CWCommunicationHandler;
-import com.cw.Utils.CWConnProtocol;
-import com.cw.Utils.IpPort;
-import com.cw.Utils.ProtocolVal;
-import com.cw.Utils.Utils;
 import com.cw.codec.CWConnProtocolDecoder;
 import com.cw.codec.CWConnProtocolEncoder;
 import com.cw.node.CWNode;
@@ -103,6 +89,11 @@ public class CWCommunicationClient implements Runnable{
 		            b.handler(new ChannelInitializer<SocketChannel>() {
 		                @Override
 		                public void initChannel(SocketChannel ch) throws Exception {
+							// ch.pipeline().addLast(new ReadTimeoutHandler(10));	// 이 핸들러 사용하면 Read 타임아웃 시 바로 연결끊음.. 10초..
+							// 12초동안 수신하는 메세지가 없는지 감지, 5초동안 송신하는 메세지가 없는지 감지
+							ch.pipeline().addLast(new IdleStateHandler(12, 5, 0));
+							ch.pipeline().addLast(new IdleProofHandler( getChannelWriteQueues(), callback )); // 일정 시간 송/수신 메세지가 없을 시에 처리로직 핸들러..
+
 		                	ch.pipeline().addLast(new CWConnProtocolEncoder());
 		                	ch.pipeline().addLast(new CWConnProtocolDecoder());
 		                	ch.pipeline().addLast(new CWCommunicationHandler(myip, myport, getSessions(), getChannelWriteQueues(), callback ));

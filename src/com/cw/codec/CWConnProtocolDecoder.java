@@ -1,17 +1,11 @@
 package com.cw.codec;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import com.cw.Utils.CWConnProtocol;
 import com.cw.Utils.ProtocolVal;
-import com.cw.node.CWNode;
 
 public class CWConnProtocolDecoder extends ByteToMessageDecoder{
 
@@ -50,24 +44,22 @@ public class CWConnProtocolDecoder extends ByteToMessageDecoder{
 		byte[] bytes = new byte[data.readableBytes()];
 		data.readBytes(bytes);
 		
-		// 만약 받아온 데이터가 JSON으로 파싱에 실패한다면 이것은 내가 만든 프로토콜로 구성된것이 아닌 이상한 패킷인 것..
-		String receivedDataJsonStr;
-		try {
-			receivedDataJsonStr = new String(bytes, 0, bytes.length, "UTF-8");
-			new JSONObject(receivedDataJsonStr);
-		} catch (UnsupportedEncodingException e) {
-			System.out.println("UnsupportedEncodingException..");
-			System.out.println("Packet Clear with 'in.readBytes(in.readableBytes());'");
-			in.readBytes(in.readableBytes());
-			System.out.println("99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999");
-			return ;
-		} catch(JSONException je) {
-			System.out.println("JSONException..");
-			System.out.println("Packet Clear with 'in.readBytes(in.readableBytes());'");
-			in.readBytes(in.readableBytes());
-			System.out.println("99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999");
-			return ;
-		}
+//		// 만약 받아온 데이터가 JSON으로 파싱에 실패한다면 이것은 내가 만든 프로토콜로 구성된것이 아닌 이상한 패킷인 것..
+//		String receivedDataJsonStr;
+//		try {
+//			receivedDataJsonStr = new String(bytes, 0, bytes.length, "UTF-8");
+//			new JSONObject(receivedDataJsonStr);
+//		} catch (UnsupportedEncodingException e) {
+//			System.out.println("UnsupportedEncodingException..");
+//			System.out.println("Packet Clear with 'in.readBytes(in.readableBytes());'");
+//			in.readBytes(in.readableBytes());
+//			return ;
+//		} catch(JSONException je) {
+//			System.out.println("JSONException..");
+//			System.out.println("Packet Clear with 'in.readBytes(in.readableBytes());'");
+//			in.readBytes(in.readableBytes());
+//			return ;
+//		}
 		
 		CWConnProtocol pObject = new CWConnProtocol(/*header, */ProtocolVal.convert(protocol), bytes);
 		

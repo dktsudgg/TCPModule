@@ -1,34 +1,20 @@
 package com.cw.component;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.net.Socket;
-import java.util.ArrayList;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.atomic.AtomicInteger;
+
+import com.cw.Utils.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.WriteBufferWaterMark;
-import io.netty.channel.group.ChannelGroup;
-import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.timeout.ReadTimeoutHandler;
-import io.netty.util.AttributeKey;
-import io.netty.util.HashedWheelTimer;
-import io.netty.util.concurrent.GlobalEventExecutor;
-import io.netty.util.internal.SystemPropertyUtil;
+import io.netty.handler.timeout.IdleStateHandler;
 
-import com.cw.Utils.CWCommunicationCallback;
-import com.cw.Utils.CWCommunicationHandler;
-import com.cw.Utils.CWConnProtocol;
-import com.cw.Utils.IpPort;
-import com.cw.Utils.Utils;
 import com.cw.codec.CWConnProtocolDecoder;
 import com.cw.codec.CWConnProtocolEncoder;
 
@@ -80,10 +66,19 @@ public class CWCommunicationServer implements Runnable{
              .childHandler(new ChannelInitializer<SocketChannel>() { // (4)
                  @Override
                  public void initChannel(SocketChannel ch) throws Exception {
-//                	 ch.pipeline().addLast(new ReadTimeoutHandler(30));	// Read 타임아웃 설정.. 30초
+                     // 방법 1. 일정 시간동안 통신 없을 시 무조건 끊는 방법
+                     // ch.pipeline().addLast(new ReadTimeoutHandler(10));	// 이 핸들러 사용하면 Read 타임아웃 시 바로 연결끊음.. 10초..
+
+//                     // 방법 2. 일정 시간동안 통신 없을 시 dummy패킷을 보내서 연결의 정상 여부를 확인하는 방법.
+//                     // 12초동안 수신하는 메세지가 없는지 감지 / 5초동안 송신하는 메세지가 없는지 감지하는 핸들러
+                     ch.pipeline().addLast(new IdleStateHandler(12, 5, 0));
+//                     // 일정 시간 송/수신 메세지가 없을 시 IdleStateHandler로부터 발생하는 이벤트 처리로직 핸들러..
+                     ch.pipeline().addLast(new IdleProofHandler( getChannelWriteQueues(), callback ));
+
                 	 ch.pipeline().addLast(new CWConnProtocolEncoder());
                      ch.pipeline().addLast(new CWConnProtocolDecoder());
                      ch.pipeline().addLast(new CWCommunicationHandler(myip, myport, getSessions(), getChannelWriteQueues(), callback ));
+
                  }
              })
              .option(ChannelOption.SO_BACKLOG, 128)          // (5)
@@ -132,6 +127,7 @@ public class CWCommunicationServer implements Runnable{
 				String msg = (String) obj;
 				System.out.println("sendData request is Failed ::"+msg);
 			}
-		}).run();
+
+        }).run();
     }
 }

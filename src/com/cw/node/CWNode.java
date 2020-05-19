@@ -1,33 +1,19 @@
 package com.cw.node;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import org.json.JSONObject;
-
 import com.cw.Utils.CWCommunicationCallback;
 import com.cw.Utils.CWConnProtocol;
 import com.cw.Utils.IpPort;
-import com.cw.Utils.ProtocolVal;
-import com.cw.Utils.Utils;
 import com.cw.component.CWCommunicationClient;
 import com.cw.component.CWCommunicationServer;
 
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.handler.stream.ChunkedStream;
-import io.netty.util.ReferenceCountUtil;
 
 public class CWNode {
 	
@@ -129,6 +115,8 @@ public class CWNode {
 		CWConnProtocol queueData = null;
 		
 		int tick = 0;
+
+//		ChannelFuture f;
 		
 		while(channel.isWritable() && targetChannelQueue != null && targetChannelQueue.isEmpty()==false ) {
 			tick++;
@@ -140,6 +128,17 @@ public class CWNode {
 				
 				if(queueData != null) {
 					channel.write(queueData);
+//					f = channel.write(queueData);
+//					f.addListener(new ChannelFutureListener() {
+//						@Override
+//						public void operationComplete(ChannelFuture future) throws Exception {
+//							if(clientCallback != null) {
+//								clientCallback.sendDataSuccess(future);
+//							}
+//						}
+//
+//					});
+
 					wrote = true;
 				}
 				
@@ -209,63 +208,64 @@ public class CWNode {
         Properties properties = new Properties();
         
         try {
-            FileReader reader = new FileReader(resource);
-            properties.load(reader);
-            
-            System.out.println("CWNode..");
-            
-            String nodeIp = properties.getProperty("ip");							// 노드의 IP 값 불러옴
-            int nodePort = Integer.parseInt( properties.getProperty("port") );		// 노드의 PORT 값 불러옴
-            String targetNodeListStr = properties.getProperty("targetNodeList");	// 바라볼 노드의 IP:PORT 리스트를 불러옴
-            
-            String[] targetNodeList = null;
-            if(targetNodeListStr != null && targetNodeListStr.equals("")==false ) {
-            	targetNodeListStr = targetNodeListStr.replaceAll(" ", "");	// 공백 제거..
-            	targetNodeList = targetNodeListStr.split(",");
-            }
-            
-            System.out.println("Node IP : " + nodeIp);
-            System.out.println("Node PORT : " + nodePort);
-            
-            // Node instance..
-    		CWNode cwnode = new CWNode(nodeIp, nodePort, new CWCommunicationCallback() {
-    			
-    			@Override
-    			public void connectionFailure(Object obj) {
-    				
-    				System.out.println("connectionFailure callback..!");
-    			}
-    			
-    			@Override
-    			public void sendDataFailure(Object obj, CWConnProtocol data) {
-    				String msg = (String) obj;
-    				System.out.println("sendData request is Failed ::"+msg);
-    			}
-    		});
+//            FileReader reader = new FileReader(resource);
+//            properties.load(reader);
+//
+//            System.out.println("CWNode Start..");
+//
+//            String nodeIp = properties.getProperty("ip");							// 노드의 IP 값 불러옴
+//            int nodePort = Integer.parseInt( properties.getProperty("port") );		// 노드의 PORT 값 불러옴
+//            String targetNodeListStr = properties.getProperty("targetNodeList");	// 바라볼 노드의 IP:PORT 리스트를 불러옴
+//
+//            String[] targetNodeList = null;
+//            if(targetNodeListStr != null && targetNodeListStr.equals("")==false ) {
+//            	targetNodeListStr = targetNodeListStr.replaceAll(" ", "");	// 공백 제거..
+//            	targetNodeList = targetNodeListStr.split(",");
+//            }
+//
+//            System.out.println("Node IP : " + nodeIp);
+//            System.out.println("Node PORT : " + nodePort);
+//
+//            // Node instance..
+//    		CWNode cwnode = new CWNode(nodeIp, nodePort, new CWCommunicationCallback() {
+//
+//    			@Override
+//    			public void connectionFailure(Object obj) {
+//
+//    				System.out.println("connectionFailure callback..!");
+//    			}
+//
+//    			@Override
+//    			public void sendDataFailure(Object obj, CWConnProtocol data) {
+//    				String msg = (String) obj;
+//    				System.out.println("sendData request is Failed ::"+msg);
+//    			}
+//
+//			});
+//
+//    		// targetNodes Setting..
+//    		if(targetNodeList != null) {
+//    			for(int i=0; i < targetNodeList.length; i++) {
+//    				String[] targetNodeIpAndPort = targetNodeList[i].split(":");
+//    				String targetNodeIp = targetNodeIpAndPort[0];
+//    				int targetNodePort = Integer.parseInt( targetNodeIpAndPort[1] );
+//
+//    				cwnode.addClient(targetNodeIp, targetNodePort);
+//
+//    				System.out.println("TargetNode-" + targetNodeIp + ":" + targetNodePort + " is enrolled..");
+//    			}
+//
+//    		}
+//
+//    		System.out.println("");
+//
+//    		// start Node..
+//    		cwnode.start();
+//
+//    		// blocking Main Thread not to finish java main function scope..
+//    		cwnode.block();
     		
-    		// targetNodes Setting..
-    		if(targetNodeList != null) {
-    			for(int i=0; i < targetNodeList.length; i++) {
-    				String[] targetNodeIpAndPort = targetNodeList[i].split(":");
-    				String targetNodeIp = targetNodeIpAndPort[0];
-    				int targetNodePort = Integer.parseInt( targetNodeIpAndPort[1] );
-    				
-    				cwnode.addClient(targetNodeIp, targetNodePort);
-    				
-    				System.out.println("TargetNode-" + targetNodeIp + ":" + targetNodePort + " is enrolled..");
-    			}
-    			
-    		}
-    		
-    		System.out.println("");
-    		
-    		// start Node..
-    		cwnode.start();
-    		
-    		// blocking Main Thread not to finish java main function scope..
-    		cwnode.block();
-    		
-//    		test(null);
+    		test(null);
     		
         } catch (IOException e) {
         	System.out.println(resource+" 파일을 로드할 수 없습니다. 해당 경로에 설정파일을 작성하시거나, 경로를 확인 부탁드립니다!");
@@ -275,6 +275,8 @@ public class CWNode {
 	}
 
 	public static void test(String[] args) throws Exception {
+
+		System.out.println("CWNode Test Mode Start..");
 		
 		String myLocalIp = "192.168.0.4";
 		
@@ -303,29 +305,30 @@ public class CWNode {
 				String msg = (String) obj;
 				System.out.println("cwnode sendData request is Failed ::"+msg);
 			}
+
 		});
-		cwnode.addClient(myLocalIp, 8892);
-//		cwnode.addClient("192.168.0.140", 8891);
+//		cwnode.addClient(myLocalIp, 8892);
+		cwnode.addClient("192.168.0.140", 8891);
 		
-		CWNode cwnode2 = new CWNode(myLocalIp, 8892, new CWCommunicationCallback() {
-			
-			@Override
-			public void connectionFailure(Object obj) {
-				
-				System.out.println("cwnode2's connectionFailure callback..!");
-			}
-			
-			@Override
-			public void sendDataFailure(Object obj, CWConnProtocol data) {
-				String msg = (String) obj;
-				System.out.println("cwnode2 sendData request is Failed ::"+msg);
-			}
-		});
-		cwnode2.addClient("192.168.0.140", 8891);
-		cwnode2.addClient(myLocalIp, 8890);
+//		CWNode cwnode2 = new CWNode(myLocalIp, 8892, new CWCommunicationCallback() {
+//
+//			@Override
+//			public void connectionFailure(Object obj) {
+//
+//				System.out.println("cwnode2's connectionFailure callback..!");
+//			}
+//
+//			@Override
+//			public void sendDataFailure(Object obj, CWConnProtocol data) {
+//				String msg = (String) obj;
+//				System.out.println("cwnode2 sendData request is Failed ::"+msg);
+//			}
+//		});
+//		cwnode2.addClient("192.168.0.140", 8891);
+//		cwnode2.addClient(myLocalIp, 8890);
 		
 		cwnode.start();
-		cwnode2.start();
+//		cwnode2.start();
 		
 		Thread.sleep(5000);
 		
@@ -379,7 +382,7 @@ public class CWNode {
 //    	System.out.println("sendThread is Done......................................................................................");
 		
 		cwnode.block();
-		cwnode2.block();
+//		cwnode2.block();
 		
 	}
 

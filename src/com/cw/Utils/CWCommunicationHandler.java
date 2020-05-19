@@ -1,31 +1,18 @@
 package com.cw.Utils;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.cw.component.CWCommunicationServer;
 import com.cw.node.CWNode;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.stream.ChunkedStream;
 import io.netty.util.ReferenceCountUtil;
 
 public class CWCommunicationHandler extends ChannelInboundHandlerAdapter { // (1)
@@ -154,8 +141,7 @@ public class CWCommunicationHandler extends ChannelInboundHandlerAdapter { // (1
 				
 				CWNode.sendData(ctx.channel(), helloToo, callback, channelWriteQueues);
 				ReferenceCountUtil.release(helloToo);
-				
-				// 이후 로직은 RECV_HELLO와 같으므로 break 걸지 않음..
+
 				break;
 				
 			case ACK_HELLO:	// HELLO 프로토콜 응답 받을경우.. 생성된 연결을 저장..	
@@ -257,6 +243,9 @@ public class CWCommunicationHandler extends ChannelInboundHandlerAdapter { // (1
 				}
 				
 				// 2
+				System.out.println("Join to sleep");
+//				Thread.sleep(10000);
+				System.out.println("Wakeup from sleep. Send Message !");
 				CWConnProtocol returnTestACK = new CWConnProtocol(
 					ProtocolVal.TEST_ACK
 					, jo_test.toString().getBytes("UTF-8")

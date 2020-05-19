@@ -1,13 +1,10 @@
 package com.cw.codec;
 
-import java.nio.charset.Charset;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 import com.cw.Utils.CWConnProtocol;
 import com.cw.Utils.ProtocolVal;
-import com.cw.node.CWNode;
 
 public class CWConnProtocolEncoder extends MessageToByteEncoder<CWConnProtocol>{
 	
@@ -40,15 +37,6 @@ public class CWConnProtocolEncoder extends MessageToByteEncoder<CWConnProtocol>{
 	    out.writeBytes(packet);
 	    
 	    packet.release();
-	}
-
-	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		
-//		cause.printStackTrace();
-//		System.out.println("Eecoder exceptionCaught..");
-		
-		super.exceptionCaught(ctx, cause);
 	}
 
 }

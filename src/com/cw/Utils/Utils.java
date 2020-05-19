@@ -3,8 +3,6 @@ package com.cw.Utils;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.UnknownHostException;
 
 public class Utils {
 	

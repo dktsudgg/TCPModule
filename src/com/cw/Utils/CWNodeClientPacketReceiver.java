@@ -1,7 +1,6 @@
 package com.cw.Utils;
 
 import java.io.BufferedInputStream;
-import java.io.IOException;
 
 public class CWNodeClientPacketReceiver implements Runnable{
 	
