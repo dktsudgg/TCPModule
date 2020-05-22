@@ -242,9 +242,9 @@ public class CWCommunicationHandler extends ChannelInboundHandlerAdapter { // (1
 				}
 				
 				// 2
-				System.out.println("Join to sleep");
+//				System.out.println("Join to sleep");
 //				Thread.sleep(10000);
-				System.out.println("Wakeup from sleep. Send Message !");
+//				System.out.println("Wakeup from sleep. Send Message !");
 				CWConnProtocol returnTestACK = new CWConnProtocol(
 					ProtocolVal.TEST_ACK
 					, jo_test.toString().getBytes("UTF-8")

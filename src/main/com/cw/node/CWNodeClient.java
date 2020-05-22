@@ -210,11 +210,11 @@ public class CWNodeClient {	// Blocking IO 소켓을 사용하는 클라이언�
 		
 		try {
 			// 1. 클라이언트 생성 및 연결 호출, 콜백함수 작성..
-			CWNodeClient client = new CWNodeClient(
+			final CWNodeClient client = new CWNodeClient(
 				targetNodeIp
 				, targetNodePort
-			)
-			.connectAsyncMode(new CWNodeClientCallback() {
+			);
+			client.connectAsyncMode(new CWNodeClientCallback() {
 				
 				@Override
 				public void receivedData(Object obj) {
@@ -227,15 +227,26 @@ public class CWNodeClient {	// Blocking IO 소켓을 사용하는 클라이언�
 						receivedPacketLog += "\n" + "Data : " + new String(packet.getData(), 0, packet.getData().length, "UTF-8");
 						receivedPacketLog += "\n" + "<<<--------------------------->>>\n";
 						System.out.println(receivedPacketLog);
+
+						// if server send PING, then client send PONG.
+						if(packet.getProtocol().equals(ProtocolVal.SEND_PINGPONG)){
+							JSONObject jsonPing = new JSONObject();
+							jsonPing.put("msg", "pong");
+
+							client.send(ProtocolVal.ACK_PINGPONG, jsonPing.toString());
+						}
+
 					} catch(UnsupportedEncodingException ue) {
 						
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
-					
+
 				}
 				
 				@Override
 				public void connectionFailure(Object obj) {
-					Exception e = (IOException) obj;
+					Exception e = (Exception) obj;
 					e.printStackTrace();
 					
 				}
