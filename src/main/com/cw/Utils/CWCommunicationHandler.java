@@ -2,6 +2,8 @@ package main.com.cw.Utils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -121,9 +123,6 @@ public class CWCommunicationHandler extends ChannelInboundHandlerAdapter { // (1
 
 		try{
 			
-			ChannelFuture f;
-			CWConnProtocol temp;
-			
 			switch(receivedm.getProtocol()){
 			
 			case SEND_HELLO:	// HELLO 프로토콜 요청 받을 경우.. 1. HELLO 전송, 2. 생성된 연결을 저장..			
@@ -222,29 +221,27 @@ public class CWCommunicationHandler extends ChannelInboundHandlerAdapter { // (1
 				Enumeration<IpPort> iterator = this.sessions.elements();
 				while(iterator.hasMoreElements()) {	// 연결된 노드들에게 전파..
 					IpPort ipport = iterator.nextElement();
-					
+
 					// 이 패킷을 내게 전달한 노드에게는 전파하지 않는 조건문.. 노드 구성 그래프 형태에서 사이클이 존재하는 경우에는 경우에 따라 무한대로 전파될 수 있음을 주의.. 이미 받은 메세지인지 확인해서 전파 안하는 로직 추가해야됨.. !!!!!!!!!!!!
 					if(
-						ipport.getChannel() != null 
+						ipport.getChannel() != null
 						&&
 						false == ipport.getChannel().id().equals( ctx.channel().id() )
-					) 
+					)
 					{
 						CWConnProtocol returnTestData = new CWConnProtocol(
 							ProtocolVal.TEST
 							, jo_test.toString().getBytes("UTF-8")
 						);
-						
+
 						CWNode.sendData(ipport.getChannel(), returnTestData, callback, channelWriteQueues);
 						ReferenceCountUtil.release(returnTestData);
 					}
-					
+
 				}
 				
 				// 2
-//				System.out.println("Join to sleep");
-//				Thread.sleep(10000);
-//				System.out.println("Wakeup from sleep. Send Message !");
+//				jo_test.put("msg","TEST ACK RETURN");
 				CWConnProtocol returnTestACK = new CWConnProtocol(
 					ProtocolVal.TEST_ACK
 					, jo_test.toString().getBytes("UTF-8")

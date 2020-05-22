@@ -9,6 +9,8 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.WriteBufferWaterMark;
+import io.netty.channel.epoll.EpollEventLoopGroup;
+import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -54,15 +56,19 @@ public class CWCommunicationServer implements Runnable{
     public void run() {
     	
         EventLoopGroup bossGroup = new NioEventLoopGroup(1); // (1)
+//        EventLoopGroup bossGroup = new EpollEventLoopGroup(1); // (1)
         
         int DEFAULT_WORKERGROUP_THREADS = Math.max(1, SystemPropertyUtil.getInt("io.netty.eventLoopThreads", Runtime.getRuntime().availableProcessors() * 2));
 //        int DEFAULT_WORKERGROUP_THREADS = 16;
+
         EventLoopGroup workerGroup = new NioEventLoopGroup( DEFAULT_WORKERGROUP_THREADS );
+//        EventLoopGroup workerGroup = new EpollEventLoopGroup( DEFAULT_WORKERGROUP_THREADS );
         
         try {
             ServerBootstrap b = new ServerBootstrap(); // (2)
             b.group(bossGroup, workerGroup)
              .channel(NioServerSocketChannel.class) // (3)
+//             .channel(EpollServerSocketChannel.class)
              .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3*1000)	// 커넥션 타임아웃 설정.. 3초
              .childHandler(new ChannelInitializer<SocketChannel>() { // (4)
                  @Override

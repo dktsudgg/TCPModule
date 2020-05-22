@@ -16,34 +16,26 @@ public class CWConnProtocolDecoder extends ByteToMessageDecoder{
 	
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-		
-		// TODO Auto-generated method stub
-//		System.out.println("1.Readable bytes size : "+in.readableBytes());
+
 		if (in.readableBytes() < 2) {
 			in.resetReaderIndex();
-            return; 
+            return;
         }
-		
+
 		short header = in.readShort();
-//		System.out.println("Reading two bytes for header is done. ");
-		
-//		System.out.println("2.Readable bytes size : "+in.readableBytes());
+
 		if(in.readableBytes() <= header){
 			in.resetReaderIndex();
 			return;
 		}
-		
+
 		byte protocol = in.readByte();
-//		System.out.println("Reading one bytes for protocol is done. ");
-//		System.out.println("3.Readable bytes size : "+in.readableBytes());
 		ByteBuf data = in.readBytes(header);
-//		System.out.println("Reading bytes for data is done. ");
-//		System.out.println("4.Readable bytes size : "+in.readableBytes());
-		
+
 		// ByteBuf to byte[]
 		byte[] bytes = new byte[data.readableBytes()];
 		data.readBytes(bytes);
-		
+
 //		// 만약 받아온 데이터가 JSON으로 파싱에 실패한다면 이것은 내가 만든 프로토콜로 구성된것이 아닌 이상한 패킷인 것..
 //		String receivedDataJsonStr;
 //		try {
@@ -60,11 +52,11 @@ public class CWConnProtocolDecoder extends ByteToMessageDecoder{
 //			in.readBytes(in.readableBytes());
 //			return ;
 //		}
-		
+
 		CWConnProtocol pObject = new CWConnProtocol(/*header, */ProtocolVal.convert(protocol), bytes);
-		
+
         out.add(pObject);
-        
+
         data.release();
         in.discardReadBytes();
         bytes = null;

@@ -84,7 +84,7 @@ public class CWNode {
 	public static void sendData(Channel channel, CWConnProtocol data, CWCommunicationCallback clientCallback, ConcurrentHashMap<String, LinkedBlockingDeque> channelWriteQueues) {
     	
 		if(channel != null) {
-			
+
 			LinkedBlockingDeque targetChannelQueue = channelWriteQueues.get(channel.id().toString());
 			if(targetChannelQueue != null) {
 				
