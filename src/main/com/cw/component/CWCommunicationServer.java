@@ -14,6 +14,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 
+import io.netty.util.internal.SystemPropertyUtil;
 import main.com.cw.Utils.*;
 import main.com.cw.codec.CWConnProtocolDecoder;
 import main.com.cw.codec.CWConnProtocolEncoder;
@@ -54,8 +55,8 @@ public class CWCommunicationServer implements Runnable{
     	
         EventLoopGroup bossGroup = new NioEventLoopGroup(1); // (1)
         
-//        int DEFAULT_WORKERGROUP_THREADS = Math.max(1, SystemPropertyUtil.getInt("io.netty.eventLoopThreads", Runtime.getRuntime().availableProcessors() * 2));
-        int DEFAULT_WORKERGROUP_THREADS = 16;
+        int DEFAULT_WORKERGROUP_THREADS = Math.max(1, SystemPropertyUtil.getInt("io.netty.eventLoopThreads", Runtime.getRuntime().availableProcessors() * 2));
+//        int DEFAULT_WORKERGROUP_THREADS = 16;
         EventLoopGroup workerGroup = new NioEventLoopGroup( DEFAULT_WORKERGROUP_THREADS );
         
         try {
