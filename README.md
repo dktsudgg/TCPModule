@@ -33,6 +33,9 @@ java -jar tcpmodule-{version}.jar
 # Or you can add jvm parameter like this when you run jar file, for trouble shooting Netty Memory leak
 java -Dio.netty.leakDetectionLevel=advanced -jar tcpmodule-{version}.jar
 
+# Or for remote jconsole monitering
+java -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.port=8890 -Dcom.sun.management.jmxremote.rmi.port=8890 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Djava.rmi.server.hostname=192.168.0.140 -Dcom.sun.management.jmxremote.authenticate=false -jar tcpmodule-{version}.jar
+
 
 # 3. Use client source to send TEST message to server in [Usage example] - [2. Client example] Section.
 ```
