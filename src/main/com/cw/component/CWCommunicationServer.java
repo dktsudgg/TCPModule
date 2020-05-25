@@ -88,11 +88,11 @@ public class CWCommunicationServer implements Runnable{
 
                  }
              })
-             .option(ChannelOption.SO_BACKLOG, 128)          // (5)
+             .option(ChannelOption.SO_BACKLOG, 128)          // (5).. 동시에 N개만큼의 클라이언트 연결 요청을 받아들이겠다는 의미.. https://groups.google.com/forum/#!topic/netty-ko/TA9wek1m8Ss
              .childOption(ChannelOption.SO_KEEPALIVE, true) // (6)
              .option(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(8 * 1024, 32 * 1024))
             ;
-    
+
             // Bind and start to accept incoming connections.
             ChannelFuture f = b.bind(myport).sync(); // (7)
 
