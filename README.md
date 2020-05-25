@@ -159,7 +159,7 @@ client.disconnect();
 
 ## Development setup
 
-you have to install java runtime.
+you have to install java runtime.( 1.8 )
 
 ## TCP Protocol explanation
 I designed tcp protocol shape like this.
