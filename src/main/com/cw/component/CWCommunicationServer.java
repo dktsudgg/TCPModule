@@ -4,11 +4,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.WriteBufferWaterMark;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.*;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -54,20 +51,33 @@ public class CWCommunicationServer implements Runnable{
     
     @Override
     public void run() {
+
+        Class channelClass = NioServerSocketChannel.class;
+        EventLoopGroup bossGroup = null;
+        EventLoopGroup workerGroup = null;
     	
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1); // (1)
+//        EventLoopGroup bossGroup = new NioEventLoopGroup(1); // (1)
 //        EventLoopGroup bossGroup = new EpollEventLoopGroup(1); // (1)
         
         int DEFAULT_WORKERGROUP_THREADS = Math.max(1, SystemPropertyUtil.getInt("io.netty.eventLoopThreads", Runtime.getRuntime().availableProcessors() * 2));
 //        int DEFAULT_WORKERGROUP_THREADS = 16;
 
-        EventLoopGroup workerGroup = new NioEventLoopGroup( DEFAULT_WORKERGROUP_THREADS );
+//        EventLoopGroup workerGroup = new NioEventLoopGroup( DEFAULT_WORKERGROUP_THREADS );
 //        EventLoopGroup workerGroup = new EpollEventLoopGroup( DEFAULT_WORKERGROUP_THREADS );
-        
+
+        if (OSValidator.isUnix()) {
+            bossGroup = new EpollEventLoopGroup(1 );
+            workerGroup = new EpollEventLoopGroup(DEFAULT_WORKERGROUP_THREADS );
+            channelClass =  EpollServerSocketChannel.class;
+        } else {
+            bossGroup = new NioEventLoopGroup( 1 );
+            workerGroup = new NioEventLoopGroup( DEFAULT_WORKERGROUP_THREADS );
+        }
+
         try {
             ServerBootstrap b = new ServerBootstrap(); // (2)
             b.group(bossGroup, workerGroup)
-             .channel(NioServerSocketChannel.class) // (3)
+             .channel( channelClass ) // (3)
 //             .channel(EpollServerSocketChannel.class)
              .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3*1000)	// 커넥션 타임아웃 설정.. 3초
              .childHandler(new ChannelInitializer<SocketChannel>() { // (4)
@@ -89,8 +99,17 @@ public class CWCommunicationServer implements Runnable{
                  }
              })
              .option(ChannelOption.SO_BACKLOG, 128)          // (5).. 동시에 N개만큼의 클라이언트 연결 요청을 받아들이겠다는 의미.. https://groups.google.com/forum/#!topic/netty-ko/TA9wek1m8Ss
+//             .childOption(ChannelOption.SO_RCVBUF, 10485760)
+//             .childOption(ChannelOption.SO_SNDBUF, 10485760)
+             .option(ChannelOption.SO_REUSEADDR, true)
+
+             .childOption(ChannelOption.RCVBUF_ALLOCATOR, new AdaptiveRecvByteBufAllocator())
              .childOption(ChannelOption.SO_KEEPALIVE, true) // (6)
+             .childOption(ChannelOption.TCP_NODELAY, true)  // 네이글 알고리즘 off
+             .childOption(ChannelOption.SO_REUSEADDR, true)
+             .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
              .option(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(8 * 1024, 32 * 1024))
+             .childOption(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(8 * 1024, 32 * 1024))
             ;
 
             // Bind and start to accept incoming connections.

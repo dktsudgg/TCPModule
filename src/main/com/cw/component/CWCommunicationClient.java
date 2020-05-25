@@ -3,6 +3,7 @@ package main.com.cw.component;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.handler.timeout.IdleStateHandler;
 import main.com.cw.Utils.*;
 import org.json.JSONObject;
@@ -86,6 +87,9 @@ public class CWCommunicationClient implements Runnable{
 		            b.option(ChannelOption.SO_KEEPALIVE, true); // (4)
 		            b.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3*1000);	// 커넥션 타임아웃 설정.. 3초
 		            b.option(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(8 * 1024, 32 * 1024));
+//		            b.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+//					b.option(ChannelOption.TCP_NODELAY, true);
+//					b.option(ChannelOption.SO_REUSEADDR, true);
 		            b.handler(new ChannelInitializer<SocketChannel>() {
 		                @Override
 		                public void initChannel(SocketChannel ch) throws Exception {

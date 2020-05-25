@@ -203,7 +203,7 @@ public class CWCommunicationHandler extends ChannelInboundHandlerAdapter { // (1
 				CWNode.sendData(ctx.channel(), pong, callback, channelWriteQueues);
 				ReferenceCountUtil.release(pong);
 				break;	////
-				
+
 			case ACK_PINGPONG:
 				Utils.log(this.myip, this.myport, new String(receivedm.getData(), 0, receivedm.getData().length, "UTF-8"));
 				break;	////
@@ -213,7 +213,7 @@ public class CWCommunicationHandler extends ChannelInboundHandlerAdapter { // (1
 				// 2. 나한테 이 패킷을 전달한 애 한테 ACK 전송.. 
 				
 				// TEST메세지 표준출력..
-				messageLog(receivedm);
+//				messageLog(receivedm);
 				
 				JSONObject jo_test = new JSONObject(new String(receivedm.getData(), 0, receivedm.getData().length, "UTF-8"));
 				
