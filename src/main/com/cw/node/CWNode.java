@@ -55,7 +55,7 @@ public class CWNode {
 		this.node_client_list = new Vector<Thread>();
 	}
 	
-	public void addClient(String otherNodeHost, int otherNodePort) {
+	public void addConnector(String otherNodeHost, int otherNodePort) {
 		CWCommunicationClient newCli = new CWCommunicationClient(this.myip, this.myport, this.sessions, this.channelWriteQueues, otherNodeHost, otherNodePort);
 		
 		newCli.setCallback(this.clientCallback);
@@ -298,7 +298,7 @@ public class CWNode {
     				String targetNodeIp = targetNodeIpAndPort[0];
     				int targetNodePort = Integer.parseInt( targetNodeIpAndPort[1] );
 
-    				cwnode.addClient(targetNodeIp, targetNodePort);
+    				cwnode.addConnector(targetNodeIp, targetNodePort);
 
     				System.out.println("TargetNode-" + targetNodeIp + ":" + targetNodePort + " is enrolled..");
     			}
@@ -356,7 +356,7 @@ public class CWNode {
 
 		});
 //		cwnode.addClient(myLocalIp, 8892);
-		cwnode.addClient("192.168.0.140", 8891);
+		cwnode.addConnector("192.168.0.140", 8891);
 		
 //		CWNode cwnode2 = new CWNode(myLocalIp, 8892, new CWCommunicationCallback() {
 //
