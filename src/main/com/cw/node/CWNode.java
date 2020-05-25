@@ -87,10 +87,13 @@ public class CWNode {
 
 			LinkedBlockingDeque targetChannelQueue = channelWriteQueues.get(channel.id().toString());
 			if(targetChannelQueue != null) {
-				
+
+				// 데이터 송수신 방법 1
 				targetChannelQueue.add(data);
-								
 				execSendWriteQueue(channel, targetChannelQueue, clientCallback);
+
+				// 데이터 송수신 방법 2
+//				execSendWriteData(channel, data, targetChannelQueue, clientCallback);
 				
 			}
 			else {
@@ -110,36 +113,80 @@ public class CWNode {
     	
     	
     }
+
+    public static void execSendWriteData(Channel channel, CWConnProtocol data, LinkedBlockingDeque targetChannelQueue, CWCommunicationCallback clientCallback){
+		boolean wrote = false;
+		CWConnProtocol queueData = null;
+		int tick = 0;
+
+		// 채널이 writable하다면 먼저 기존에 큐에 존재하던 데이터 전부 쏴준 다음에 내꺼 쏘기..
+		// 중간에 isWritable하지 않아진다면 내가 보내려던거 큐에 넣어주고 종료..
+		while(channel.isWritable() ){
+
+			if(targetChannelQueue != null && targetChannelQueue.isEmpty()==false){
+				queueData = (CWConnProtocol) targetChannelQueue.poll();
+				try {
+
+					if(queueData != null) {
+						channel.write(queueData);
+						wrote = true;
+					}
+
+					if(wrote == true && tick % 10 == 0) {
+						channel.flush();
+						tick = 0;
+					}
+
+				} catch(Exception e) {
+					if(clientCallback != null) {
+						String msg = "Channel is null.. maybe not connected yet";
+						clientCallback.sendDataFailure(msg, queueData);
+					}
+				} finally {
+//				ReferenceCountUtil.release(queueData);
+				}
+			}
+			else if(targetChannelQueue != null && targetChannelQueue.isEmpty()==true){
+				try {
+					channel.write(data);
+					wrote = true;
+
+					if(tick % 10 == 0) {
+						channel.flush();
+						tick = 0;
+					}
+				} catch(Exception e) {
+					if(clientCallback != null) {
+						String msg = "Channel is null.. maybe not connected yet";
+						clientCallback.sendDataFailure(msg, queueData);
+					}
+				} finally {
+//				ReferenceCountUtil.release(queueData);
+				}
+
+				break;
+			}
+		}
+		if(wrote) {
+			channel.flush();
+		}
+	}
 	
 	public static void execSendWriteQueue(Channel channel, LinkedBlockingDeque targetChannelQueue, CWCommunicationCallback clientCallback) {
 		boolean wrote = false;
 		CWConnProtocol queueData = null;
 		
 		int tick = 0;
-
-//		ChannelFuture f;
 		
 		while(channel.isWritable() && targetChannelQueue != null && targetChannelQueue.isEmpty()==false ) {
 			tick++;
-			
-//			System.out.println("큐 사이즈:: " + targetChannelQueue.size());
+
 			queueData = (CWConnProtocol) targetChannelQueue.poll();
 			
 			try {
 				
 				if(queueData != null) {
 					channel.write(queueData);
-//					f = channel.write(queueData);
-//					f.addListener(new ChannelFutureListener() {
-//						@Override
-//						public void operationComplete(ChannelFuture future) throws Exception {
-//							if(clientCallback != null) {
-//								clientCallback.sendDataSuccess(future);
-//							}
-//						}
-//
-//					});
-
 					wrote = true;
 				}
 				
