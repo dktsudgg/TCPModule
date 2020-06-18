@@ -31,11 +31,11 @@ Application(Benchmark scenario that I used is in "CWNodeClient" class in this pr
 
 3. Result
 
-100 bytes packet, total 100,000 req / return 100 bytes packet => 40,000 TPS
+100 bytes packet, total 100,000 req / Each return 100 bytes packet => 40,000 TPS
 
-300 bytes packet, total 100,000 req / return 300 bytes packet => 14,380 TPS
+300 bytes packet, total 100,000 req / Each return 300 bytes packet => 14,380 TPS
 
-2K  bytes packet, total 100,000 req / return 2K  bytes packet => 4,730 TPS
+2K  bytes packet, total 100,000 req / Each return 2K  bytes packet => 4,730 TPS
 
 
 ## You can just run the Runnable jar that I committed for test
