@@ -4,12 +4,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.UnsupportedEncodingException;
 
+import com.google.gson.JsonObject;
 import main.com.cw.Utils.CWConnProtocol;
 import main.com.cw.Utils.ProtocolVal;
 import main.com.cw.Utils.Utils;
 import main.com.cw.codec.CWConnProtocolDecoder;
 import main.com.cw.codec.CWConnProtocolEncoder;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import io.netty.buffer.ByteBuf;
@@ -43,8 +43,11 @@ class CWUnitTest {
 		EmbeddedChannel channel = new EmbeddedChannel(new CWConnProtocolEncoder(), new CWConnProtocolDecoder());
 		
 		// 테스트 데이터
-		JSONObject data = new JSONObject();
-		data.put("msg", "test test test");
+//		JSONObject data = new JSONObject();
+//		data.put("msg", "test test test");
+		JsonObject data = new JsonObject();
+		data.addProperty("msg", "test test test");
+
 		// 테스트 데이터를 기반으로 만든 테스트 프로토콜 ..(ByteBuf)
 		byte[] bytes = Utils.getPacket(ProtocolVal.TEST, data.toString().getBytes("UTF-8"));
         ByteBuf bytebuf = PooledByteBufAllocator.DEFAULT.heapBuffer(1);
@@ -76,8 +79,11 @@ class CWUnitTest {
 		EmbeddedChannel channel = new EmbeddedChannel(new CWConnProtocolEncoder(), new CWConnProtocolDecoder());
 		
 		// 테스트 데이터
-		JSONObject data = new JSONObject();
-		data.put("msg", "test test test");
+//		JSONObject data = new JSONObject();
+//		data.put("msg", "test test test");
+		JsonObject data = new JsonObject();
+		data.addProperty("msg", "test test test");
+
 		// 테스트 데이터를 기반으로 만든 테스트 프로토콜 ..(CWConnP2PProtocol)
 		CWConnProtocol cwproto = new CWConnProtocol(
 			ProtocolVal.TEST
@@ -115,8 +121,11 @@ class CWUnitTest {
 		EmbeddedChannel channel = new EmbeddedChannel(new CWConnProtocolEncoder(), new CWConnProtocolDecoder());
 		
 		// 테스트 데이터
-		JSONObject data = new JSONObject();
-		data.put("msg", "test test test");
+//		JSONObject data = new JSONObject();
+//		data.put("msg", "test test test");
+		JsonObject data = new JsonObject();
+		data.addProperty("msg", "test test test");
+
 		// 테스트 데이터를 기반으로 만든 테스트 프로토콜 ..(ByteBuf)
 		byte[] bytes = Utils.getPacket(ProtocolVal.TEST, data.toString().getBytes("UTF-8"));
 		ByteBuf bytebuf = PooledByteBufAllocator.DEFAULT.heapBuffer(1);

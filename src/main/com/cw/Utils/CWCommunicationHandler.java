@@ -2,16 +2,14 @@ package main.com.cw.Utils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import main.com.cw.node.CWNode;
-import org.json.JSONObject;
 
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
@@ -127,10 +125,14 @@ public class CWCommunicationHandler extends ChannelInboundHandlerAdapter { // (1
 			
 			case SEND_HELLO:	// HELLO 프로토콜 요청 받을 경우.. 1. HELLO 전송, 2. 생성된 연결을 저장..			
 				// 1
-				JSONObject jo = new JSONObject();
-				jo.put("msg", "hello too");
-				jo.put("ip", this.myip);
-				jo.put("port", this.myport);
+//				JSONObject jo = new JSONObject();
+//				jo.put("msg", "hello too");
+//				jo.put("ip", this.myip);
+//				jo.put("port", this.myport);
+				JsonObject jo = new JsonObject();
+				jo.addProperty("msg", "hello too");
+				jo.addProperty("ip", this.myip);
+				jo.addProperty("port", this.myport);
 				
 				CWConnProtocol helloToo = new CWConnProtocol(
 					ProtocolVal.ACK_HELLO
@@ -146,9 +148,13 @@ public class CWCommunicationHandler extends ChannelInboundHandlerAdapter { // (1
 			case ACK_HELLO_END:
 					
 				// 2
-				String ip = new JSONObject( new String(receivedm.getData(), 0, receivedm.getData().length, "UTF-8") ).getString("ip");
-				int port = new JSONObject( new String(receivedm.getData(), 0, receivedm.getData().length, "UTF-8") ).getInt("port");
-				
+//				String ip = new JSONObject( new String(receivedm.getData(), 0, receivedm.getData().length, "UTF-8") ).getString("ip");
+//				int port = new JSONObject( new String(receivedm.getData(), 0, receivedm.getData().length, "UTF-8") ).getInt("port");
+				String ipAndPortStr = new String(receivedm.getData(), 0, receivedm.getData().length, "UTF-8");
+				String ip = JsonParser.parseString( ipAndPortStr ).getAsJsonObject().get("ip").getAsString();
+				int port = JsonParser.parseString( ipAndPortStr ).getAsJsonObject().get("port").getAsInt();
+
+
 				synchronized(mutex){
 					if(
 						this.sessions.get(ip+":"+port) != null
@@ -173,9 +179,12 @@ public class CWCommunicationHandler extends ChannelInboundHandlerAdapter { // (1
 							, newIpPort.getChannel().localAddress().toString() + " - " + newIpPort.getChannel().remoteAddress().toString());
 						
 						if( receivedm.getProtocol().equals(ProtocolVal.ACK_HELLO) ) {
-							JSONObject ack_hello_end = new JSONObject();
-							ack_hello_end.put("ip", this.myip);
-							ack_hello_end.put("port", this.myport);
+//							JSONObject ack_hello_end = new JSONObject();
+//							ack_hello_end.put("ip", this.myip);
+//							ack_hello_end.put("port", this.myport);
+							JsonObject ack_hello_end = new JsonObject();
+							ack_hello_end.addProperty("ip", this.myip);
+							ack_hello_end.addProperty("port", this.myport);
 					    	CWConnProtocol ack_hello_end_data = new CWConnProtocol(
 					    		ProtocolVal.ACK_HELLO_END
 								, ack_hello_end.toString().getBytes("UTF-8")
@@ -192,8 +201,10 @@ public class CWCommunicationHandler extends ChannelInboundHandlerAdapter { // (1
 				
 			case SEND_PINGPONG:
 				// pong
-				JSONObject jsonPong = new JSONObject();
-				jsonPong.put("msg", "pong");
+//				JSONObject jsonPong = new JSONObject();
+//				jsonPong.put("msg", "pong");
+				JsonObject jsonPong = new JsonObject();
+				jsonPong.addProperty("msg", "pong");
 				
 				CWConnProtocol pong = new CWConnProtocol(
 					ProtocolVal.ACK_PINGPONG
@@ -215,8 +226,10 @@ public class CWCommunicationHandler extends ChannelInboundHandlerAdapter { // (1
 				// TEST메세지 표준출력..
 //				messageLog(receivedm);
 				
-				JSONObject jo_test = new JSONObject(new String(receivedm.getData(), 0, receivedm.getData().length, "UTF-8"));
-				
+//				JSONObject jo_test = new JSONObject(new String(receivedm.getData(), 0, receivedm.getData().length, "UTF-8"));
+				String jo_test_str = new String(receivedm.getData(), 0, receivedm.getData().length, "UTF-8");
+				JsonObject jo_test = JsonParser.parseString( jo_test_str ).getAsJsonObject();
+
 				// 1
 				Enumeration<IpPort> iterator = this.sessions.elements();
 				while(iterator.hasMoreElements()) {	// 연결된 노드들에게 전파..

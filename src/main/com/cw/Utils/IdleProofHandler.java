@@ -1,11 +1,11 @@
 package main.com.cw.Utils;
 
+import com.google.gson.JsonObject;
 import main.com.cw.node.CWNode;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
-import org.json.JSONObject;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -38,8 +38,10 @@ public class IdleProofHandler extends ChannelDuplexHandler {
             else if (e.state() == IdleState.WRITER_IDLE) {
                 // ping
                 System.out.println("Ping !!");
-                JSONObject jsonPing = new JSONObject();
-                jsonPing.put("msg", "ping");
+//                JSONObject jsonPing = new JSONObject();
+//                jsonPing.put("msg", "ping");
+                JsonObject jsonPing = new JsonObject();
+                jsonPing.addProperty("msg", "ping");
 
                 CWConnProtocol packet = new CWConnProtocol(
                     ProtocolVal.SEND_PINGPONG

@@ -3,10 +3,9 @@ package main.com.cw.component;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import io.netty.buffer.PooledByteBufAllocator;
+import com.google.gson.JsonObject;
 import io.netty.handler.timeout.IdleStateHandler;
 import main.com.cw.Utils.*;
-import org.json.JSONObject;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -115,10 +114,14 @@ public class CWCommunicationClient implements Runnable{
 							Channel channel = channelFuture.channel();
 				            
 				            // HELLO 패킷 전송.. 
-				            JSONObject jo = new JSONObject();
-				            jo.put("msg", "hello");
-				            jo.put("ip", myip);
-				            jo.put("port", myport);
+//				            JSONObject jo = new JSONObject();
+//				            jo.put("msg", "hello");
+//				            jo.put("ip", myip);
+//				            jo.put("port", myport);
+							JsonObject jo = new JsonObject();
+							jo.addProperty("msg", "hello");
+							jo.addProperty("ip", myip);
+							jo.addProperty("port", myport);
 				            
 				        	CWConnProtocol hello_data = new CWConnProtocol(
 				        		ProtocolVal.SEND_HELLO
@@ -187,8 +190,9 @@ public class CWCommunicationClient implements Runnable{
 		
 		Thread.sleep(3000);
 		
-		JSONObject jo = new JSONObject();
-        jo.put("msg", "test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test"
+//		JSONObject jo = new JSONObject();
+		JsonObject jo = new JsonObject();
+        jo.addProperty("msg", "test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test"
         		+ "test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test"
         		+ "test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test"
         		+ "test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test"
