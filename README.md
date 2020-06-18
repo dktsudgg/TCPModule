@@ -15,6 +15,8 @@ This project is for understanding these two agenda and providing the sample code
 
 One n1-standard-2(vCPU x2, 7.5GB memory) instance on GCP
 
+OS - centos-7-v20200429
+
 Application - One ServerNode
 
 
