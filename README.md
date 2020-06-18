@@ -91,7 +91,7 @@ CWNodeClient client = new CWNodeClient(
 // Send and receive message using TEST protocol.
 // TEST protocol is a sample protocol implementing echo server logic.
 // you will receive TEST_ACK message from server.
-JSONObject msg_json = new JSONObject();
+JsonObject msg_json = new JsonObject();
 msg_json.put("a", "asdf");
 CWConnProtocol packet = client.send(ProtocolVal.TEST, msg_json.toString());
 
@@ -147,7 +147,7 @@ CWNodeClient client = new CWNodeClient(
 // Send and receive message using TEST protocol.
 // TEST protocol is a sample protocol implementing echo server logic.
 // you will receive TEST_ACK message from server on your CWNodeClientCallback.
-JSONObject msg_json = new JSONObject();
+JsonObject msg_json = new JsonObject();
 msg_json.put("a", "asdf");
 client.send(ProtocolVal.TEST, msg_json.toString());
 
@@ -180,6 +180,8 @@ the "DATA" field is a data for business logic in your application. it has differ
     * Update to latest version of Netty. [ netty-all-4.1.27.Final.jar --> netty-all-4.1.50.Final.jar ]
     * add network connection check logic
 (if no send/recv message between peers, send heartbeat message each other. and if no heartbeat return message from the other party, peer do close the connection.)
+* 0.0.3
+    * Change a java json parser library. ( BGehrels/JSON-java => Gson )
     
 I will add two features big/little endian logic and injecting your own Netty handler logic in later version.
 
