@@ -12,19 +12,31 @@ This project is for understanding these two agenda and providing the sample code
 
 ## Performance
 1. Server resource
+
 One n1-standard-2(vCPU x2, 7.5GB memory) instance on GCP
+
 Application - One ServerNode
 
+
 2. Client resource
+
 CPU - Intel(R) Core(TM) i7-7500U CPU @ 2.7GHz 2.9GHz
+
 memory - 32G
+
 OS - Win10 Pro
+
 Application(Benchmark scenario that I used is in "CWNodeClient" class in this project) - 1 thread
 
+
 3. Result
+
 100 bytes packet, total 100,000 req / return 100 bytes packet => 40,000 TPS
+
 300 bytes packet, total 100,000 req / return 300 bytes packet => 14,380 TPS
+
 2K  bytes packet, total 100,000 req / return 2K  bytes packet => 4,730 TPS
+
 
 ## You can just run the Runnable jar that I committed for test
 
