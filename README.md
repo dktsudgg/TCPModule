@@ -92,7 +92,7 @@ CWNodeClient client = new CWNodeClient(
 // TEST protocol is a sample protocol implementing echo server logic.
 // you will receive TEST_ACK message from server.
 JsonObject msg_json = new JsonObject();
-msg_json.put("a", "asdf");
+msg_json.addProperty("a", "asdf");
 CWConnProtocol packet = client.send(ProtocolVal.TEST, msg_json.toString());
 
 // show what client received.
@@ -148,7 +148,7 @@ CWNodeClient client = new CWNodeClient(
 // TEST protocol is a sample protocol implementing echo server logic.
 // you will receive TEST_ACK message from server on your CWNodeClientCallback.
 JsonObject msg_json = new JsonObject();
-msg_json.put("a", "asdf");
+msg_json.addProperty("a", "asdf");
 client.send(ProtocolVal.TEST, msg_json.toString());
 
 ...
