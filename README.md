@@ -10,6 +10,22 @@ This project is for understanding these two agenda and providing the sample code
 ![](p2p_achi.png)
 ![](cs_achi.png)
 
+## Performance
+--- Server resource ---
+One n1-standard-2(vCPU x2, 7.5GB memory) instance on GCP
+Application - One ServerNode
+
+--- Client resource ---
+CPU - Intel(R) Core(TM) i7-7500U CPU @ 2.7GHz 2.9GHz
+memory - 32G
+OS - Win10 Pro
+Application(Benchmark scenario that I used is in "CWNodeClient" class in this project) - 1 thread
+
+--- 패킷 사이즈 변화하며 실험한 결과 ---
+100 bytes 전문을 총 10만번 req / 보낸패킷 그대로 리턴받는 시나리오 => 40,000 TPS
+300 bytes 전문을 총 10만번 req / 보낸패킷 그대로 리턴받는 시나리오 => 14,380 TPS
+2K bytes 전문을 총 10만번 req / 보낸패킷 그대로 리턴받는 시나리오 => 4,730 TPS
+
 ## You can just run the Runnable jar that I committed for test
 
 ```sh
